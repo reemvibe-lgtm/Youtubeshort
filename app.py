@@ -1,30 +1,21 @@
 import streamlit as st
-import yt_dlp
-import os
+import random
+from gtts import gTTS
 
-st.set_page_config(page_title="Universal Downloader", page_icon="⬇️")
+st.set_page_config(page_title="Crime Story Gen", layout="centered")
 
-st.title("⬇️ Universal No-Watermark Downloader")
-url = st.text_input("ضعي رابط المقطع هنا:")
+st.title("🕵️‍♀️ Crime & Mystery Story Generator")
+st.write("أدخلي موضوعاً وسأقوم بصياغة سكربت 'جريمة غامضة' مرعب ومثير للجدل!")
 
-if st.button("تحميل الفيديو"):
-    if url:
-        with st.spinner("جاري الاتصال.. (ننتحل شخصية متصفح حقيقي لتجاوز الحظر)"):
-            try:
-                # هذه الإعدادات تجعل السيرفر يظهر كمتصفح طبيعي (تتجاوز الحظر)
-                ydl_opts = {
-                    'format': 'best',
-                    'outtmpl': 'video.mp4',
-                    'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    'quiet': True,
-                    'no_warnings': True
-                }
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                
-                st.success("تم التحميل بنجاح!")
-                with open("video.mp4", "rb") as file:
-                    st.download_button("📥 اضغطي هنا للحفظ", file, "video.mp4")
-                
-            except Exception as e:
-                st.error(f"حدث خطأ: {e}. (قد يكون الرابط محظوراً أو يتطلب اشتراكاً)")
+topic = st.text_input("موضوع الفيديو (مثلاً: اختفاء غامض في غابة):")
+
+if st.button("توليد السكربت"):
+    # سكربت مصمم لزيادة وقت المشاهدة (Watch Time)
+    script = f"هل سمعتم عن قصة {topic}؟ الحقيقة أن هذا الموضوع يخفي تفاصيل لم يتوقعها أحد.. في البداية كان الأمر يبدو طبيعياً، لكن فجأة انقلبت الموازين. بقيت هذه القضية بدون حل لسنوات.. إذا كنتم تحبون الغموض، تابعوا للنهاية لتسمعوا ما لم يقل في التحقيقات!"
+    
+    st.info(script)
+    
+    # توليد الصوت
+    tts = gTTS(text=script, lang='ar', slow=False)
+    tts.save("story.mp3")
+    st.audio("story.mp3")
