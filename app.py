@@ -1,57 +1,63 @@
 import streamlit as st
-import random
+import google.generativeai as genai
 
-st.set_page_config(page_title="Brand Architect AI", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Alpha Project AI", page_icon="🧠", layout="wide")
 
-# تصميم واجهة فخمة وجذابة للمستخدمين
+# إعداد الواجهة الاحترافية
 st.markdown("""
     <style>
-    .stApp { background: linear-gradient(135deg, #0f172a, #1e1b4b); color: #f8fafc; }
-    .result-card { background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid #6366f1; margin-top: 20px; }
-    h1 { text-shadow: 0 0 10px #6366f1; }
+    .stApp { background: #0b0f19; color: #e2e8f0; }
+    .content-box { background: rgba(255, 255, 255, 0.03); padding: 25px; border-radius: 15px; border: 1px solid #3b82f6; margin-top: 20px; }
+    h1 { color: #3b82f6 !important; text-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🚀 Brand Architect AI")
-st.write("المحرك الذكي لتأسيس البراندات وصناعة الهوية التسويقية في ثوانٍ.")
+st.title("🧠 Alpha Project AI: المحلل الاستراتيجي الذكي")
+st.write("أدخل فكرة مشروعك، ودع الذكاء الاصطناعي الحقيقي يحللها ويهندس لك خطة النجاح الفورية.")
 
-# مدخلات المستخدم
-project_type = st.selectbox("ما هو مجال مشروعك القادم؟", ["تجارة إلكترونية (أزياء/عطور)", "مطعم / مقهى مبتكر", "تطبيق ذكي / أداة تقنية", "صناعة محتوى وشخصية رقمية"])
-target_audience = st.text_input("من هي فئتك المستهدفة؟ (مثال: الشباب في الخليج، الأمهات، المهتمين بالتقنية):")
+# قائمة جانبية لإدخال المفتاح بخصوصية
+st.sidebar.header("🔑 إعدادات الاتصال")
+api_key = st.sidebar.text_input("أدخلي مفتاح Gemini API الخاص بكِ:", type="password")
 
-if st.button("🏗️ هندسة البراند بالذكاء الاصطناعي"):
-    if target_audience:
-        with st.spinner("جاري التحليل الإحصائي وصياغة الاستراتيجية الرقمية..."):
-            
-            # محرك التحليل والابتكار (هنا الذكاء في توليد الأفكار المتناسقة)
-            names_pool = {
-                "تجارة إلكترونية (أزياء/عطور)": ["Velve Aura", "سديم | SADEEM", "PureLux", "أثر | ATHAR"],
-                "مطعم / مقهى مبتكر": ["Vibe & Brew", "توليفة | Tolfa", "The Roast", "رواق | Rawaq"],
-                "تطبيق ذكي / أداة تقنية": ["SwiftCode", "مِسبار | Misbar", "AlphaTask", "مُؤتمت | Automated"],
-                "صناعة محتوى وشخصية رقمية": ["The Mindset", "رادار رقمي", "InsightX", "أفق | Horizon"]
-            }
-            
-            chosen_names = random.sample(names_pool[project_type], 2)
-            
-            st.markdown('<div class="result-card">', unsafe_allow_html=True)
-            st.subheader("🎯 النتيجة النهائية لهوية مشروعك:")
-            
-            # 1. اقتراح الأسماء المميزة
-            st.write(f"### 💎 أسماء مقترحة ونادرة للبراند:")
-            for name in chosen_names:
-                st.code(name)
-                
-            # 2. خطة المحتوى (التسويق الفيرال)
-            st.write("### 🎬 خطة أول 3 فيديوهات تيك توك لجلب مبيعات:")
-            st.warning("🧠 فيديو 1 (إثارة فضول): 'لماذا يخفي عنك أصحاب هذا المجال هذا السر؟' (ركزي على حل مشكلة لـ " + target_audience + ")")
-            st.warning("🧠 فيديو 2 (خلف الكواليس): تصوير طريقة تجهيز المنتجات بأسلوب جمالي ومريح بصرياً.")
-            st.warning("🧠 فيديو 3 (العرض القوي): تقديم كود خصم حصري لفترة محدودة جداً.")
-            
-            # 3. الرؤية التسويقية
-            st.write("### 📝 الشعار اللفظي (Slogan) المقترح:")
-            st.info(f"التميز الذي يبحث عنه {target_audience}، بأسلوب يواكب المستقبل.")
-            
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.success("✅ تم بناء الهوية بنجاح! هذه الأداة توفر على أصحاب المشاريع آلاف الدولارات في الاستشارات.")
+user_idea = st.text_area("اشرح فكرة مشروعك أو متجرك بالتفصيل (كلما كتبت تفاصيل أكثر، كانت النتيجة أذكى):", height=150)
+
+if st.button("🚀 ابدأ التحليل العميّق"):
+    if not api_key:
+        st.error("❌ خطأ: الرجاء إدخال الـ API Key في القائمة الجانبية لتفعيل عقل الموقع.")
+    elif not user_idea:
+        st.error("❌ خطأ: الرجاء كتابة فكرة المشروع أولاً ليقوم البوت بتحليلها!")
     else:
-        st.error("الرجاء تحديد الفئة المستهدفة أولاً ليقوم الذكاء الاصطناعي بالتحليل الدقيق.")
+        with st.spinner("🧠 جاري إرسال البيانات إلى محرك الذكاء الاصطناعي وتحليلها..."):
+            try:
+                # تهيئة الاتصال
+                genai.configure(api_key=api_key)
+                
+                # استخدام النموذج المستقر والسريع
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                
+                # صياغة الأمر الاحترافي (Prompt)
+                prompt = f"""
+                أنت مستشار أعمال خبير ومسوق رقمي محترف. 
+                حلل فكرة المشروع التالية تحليلًا دقيقًا وعميقًا:
+                "{user_idea}"
+                
+                أعطني خطة عمل متكاملة تحتوي على:
+                1) تقييم حقيقي وصريح لجدوى الفكرة (نقاط القوة، العقبات المتوقعة وكيفية تجنبها).
+                2) ميزة تنافسية خارقة تجعل هذا المشروع يتفوق على السوق فورًا.
+                3) استراتيجية تسويق (Viral) على تيك توك: تشمل فكرة فيديو مبتكرة مع السكربت الحواري الكامل المكتوب باللهجة المحلية المناسبة للمشروع لجذب العملاء بدون دفع ريال واحد في الإعلانات.
+                
+                اجعل الأسلوب عمليًا، منظمًا، ومليئًا بالأسرار التجارية المفيدة باللغة العربية.
+                """
+                
+                response = model.generate_content(prompt)
+                
+                # عرض النتيجة داخل تصميم فخم
+                st.markdown('<div class="content-box">', unsafe_allow_html=True)
+                st.subheader("🎯 الاستراتيجية الحصريّة لمشروعك:")
+                st.write(response.text)
+                st.markdown('</div>', unsafe_allow_html=True)
+                st.success("✅ تم التحليل وصناعة الاستراتيجية بنجاح!")
+                
+            except Exception as e:
+                st.error(f"⚠️ حدث خطأ في الاتصال: {e}")
+                st.info("تأكدي من أن الـ API Key صحيح ومفعل من Google AI Studio.")
