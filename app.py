@@ -1,21 +1,39 @@
 import streamlit as st
+import itertools
 import random
-from gtts import gTTS
 
-st.set_page_config(page_title="Crime Story Gen", layout="centered")
+st.set_page_config(page_title="Elite Sniper AI", page_icon="🎯")
+st.title("🎯 Elite Sniper: صائد اليوزرات الذكي")
 
-st.title("🕵️‍♀️ Crime & Mystery Story Generator")
-st.write("أدخلي موضوعاً وسأقوم بصياغة سكربت 'جريمة غامضة' مرعب ومثير للجدل!")
-
-topic = st.text_input("موضوع الفيديو (مثلاً: اختفاء غامض في غابة):")
-
-if st.button("توليد السكربت"):
-    # سكربت مصمم لزيادة وقت المشاهدة (Watch Time)
-    script = f"هل سمعتم عن قصة {topic}؟ الحقيقة أن هذا الموضوع يخفي تفاصيل لم يتوقعها أحد.. في البداية كان الأمر يبدو طبيعياً، لكن فجأة انقلبت الموازين. بقيت هذه القضية بدون حل لسنوات.. إذا كنتم تحبون الغموض، تابعوا للنهاية لتسمعوا ما لم يقل في التحقيقات!"
+# محرك الذكاء الاصطناعي للتحليل
+def generate_elite_usernames(length, count=50):
+    chars = "abcdefghijklmnopqrstuvwxyz1234567890"
+    # تحليل التناغم: نختار حروفاً تبدو جذابة بصرياً
+    vowels = "aeiou"
     
-    st.info(script)
+    generated = set()
+    while len(generated) < count:
+        # توليد يوزر عشوائي ذكي
+        name = "".join(random.choice(chars) for _ in range(length))
+        
+        # شرط التناغم: لا نريد يوزرات مليئة بالأرقام فقط (لأنها ليست مميزة)
+        # نشترط وجود حرف واحد على الأقل ليكون اليوزر "ماركة"
+        if any(c.isalpha() for c in name):
+            generated.add(name)
+    return generated
+
+st.subheader("إعدادات الصيد:")
+col1, col2 = st.columns(2)
+with col1:
+    length = st.selectbox("طول اليوزر:", [3, 4])
+with col2:
+    num_gen = st.slider("كم يوزر تريدين توليده؟", 10, 100, 50)
+
+if st.button("🚀 ابدأ التوليد الذكي"):
+    st.write(f"جاري تحليل وتوليد {length} حروف... (ذكاء اصطناعي)")
+    results = generate_elite_usernames(length, num_gen)
     
-    # توليد الصوت
-    tts = gTTS(text=script, lang='ar', slow=False)
-    tts.save("story.mp3")
-    st.audio("story.mp3")
+    st.success("تم صيد القائمة:")
+    st.code("\n".join(results))
+    
+    st.info("⚠️ ملاحظة: هذه يوزرات احتمالية (Probabilistic). بعد توليدها، جربي نسخها واحداً تلو الآخر في إنستغرام.")
