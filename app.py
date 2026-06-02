@@ -4,7 +4,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from gtts import gTTS
-from moviepy.editor import VideoFileClip, AudioFileClip
+import moviepy.editor as mp  # التعديل السحري المتوافق مع السيرفر السحابي
 from datetime import datetime, timedelta
 
 # 1. إعدادات الهوية البصرية (AI Trend Hunter Studio)
@@ -30,33 +30,23 @@ st.write("---")
 # لوحة التحكم الجانبية
 st.sidebar.markdown("### ⚙️ إعدادات الرصد والبحث")
 trend_source = st.sidebar.selectbox("مصدر رصد التريندات والمستجدات:", ["أخبار العالم والتقنية المتداولة", "أحدث المنشورات الرائجة العامة"])
-st.sidebar.info("💡 يقوم البوت بقشط وفحص العناوين الأكثر تفاعلاً على شبكة الويب ويصيغ منها سيناريو جذاب فوراً.")
 
-# دالة قشط وجلب التريندات الحية من الويب واختيار موضوع جذاب
 def fetch_live_trending_topics():
     try:
-        # استخدام مصدر إخباري عام متجدد لقشط العناوين الرائجة
         url = "https://news.google.com/rss?hl=ar&gl=AE&ceid=AE:ar"
         response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.content, 'xml')
-        
         titles = [item.title.text for item in soup.find_all('item')]
-        
-        # تصفية واختيار عنوان عشوائي مميز من أفضل 15 تريند متداول الآن
         if titles:
             chosen_trend = random.choice(titles[:15])
-            # تنظيف العنوان من اسم المصدر الإخباري الملحق عادة في النهاية
             if " - " in chosen_trend:
                 chosen_trend = chosen_trend.split(" - ")[0]
             return chosen_trend
     except:
         pass
-    # نصوص احتياطية ذكية في حال حدوث أي بطء في الاستجابة من شبكة الأخبار
     return "تطورات متسارعة في عالم الذكاء الاصطناعي والتكنولوجيا تذهل العالم اليوم"
 
 st.subheader("🎬 مصنع الفيديوهات المعتمد على التريند الحي")
-st.write("بمجرد الضغط على الزر، سينطلق البوت لفحص الإنترنت، ومعرفة التداولات الحالية، وإنتاج فيديو كامل عنها:")
-
 if st.button("🚀 ابــدع وصــنّــع الـتـريـنـد الآلـي"):
     
     with st.spinner("🔍 1. جاري قشط الإنترنت وفحص مواضيع التريند الأكثر تفاعلاً الآن..."):
@@ -64,7 +54,6 @@ if st.button("🚀 ابــدع وصــنّــع الـتـريـنـد الآ
         st.success(f"📌 تم رصد تريند الساعة بنجاح: [{current_trend}]")
         
     with st.spinner("📝 2. جاري صياغة وكتابة سيناريو الشورتس تلقائياً بناءً على التريند..."):
-        # صياغة السيناريو بأسلوب فيرال شيق ومناسب للمشاهدات
         script_text = f"هل سمعت آخر الأخبار المتداولة بشدة الآن؟ التريند الحالي يتحدث عن: {current_trend}. هذا الموضوع يشغل منصات التواصل الاجتماعي في هذه الساعات ويثير الكثير من التساؤلات والاهتمام. ما هو رأيكم في هذا التطور المفاجئ؟ شاركونا في التعليقات ولا تنسوا المتابعة لكشف التريند القادم أولاً بأول!"
         
     with st.spinner("🎙️ 3. جاري تحويل السيناريو إلى فويس أوفر صوتي احترافي (Voice Over)..."):
@@ -72,24 +61,21 @@ if st.button("🚀 ابــدع وصــنّــع الـتـريـنـد الآ
         tts.save("trend_voice.mp3")
         
     with st.spinner("📺 4. جاري جلب فيديو الخلفية ودمج الصوت والمونتاج التلقائي بالكامل..."):
-        # جلب مقطع فيديو عالي الدقة وعصري مناسب للخلفيات السريعة
         bg_video_url = "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-numbers-31948-large.mp4"
-        
         video_data = requests.get(bg_video_url).content
         with open("trend_bg.mp4", "wb") as f:
             f.write(video_data)
             
         try:
-            # معالجة المونتاج ودمج الصوت والفيديو آلياً
-            video_clip = VideoFileClip("trend_bg.mp4").subclip(0, 18) # قص مقطع بطول 18 ثانية شورتس
-            audio_clip = AudioFileClip("trend_voice.mp3")
+            # استخدام الاختصار المحدث المتوافق السحابي mp.VideoFileClip
+            video_clip = mp.VideoFileClip("trend_bg.mp4").subclip(0, 18)
+            audio_clip = mp.AudioFileClip("trend_voice.mp3")
             
             final_clip = video_clip.set_audio(audio_clip)
             final_clip.write_videofile("trend_output.mp4", codec="libx264", audio_codec="aac")
             
             st.success("✨ تم الانتهاء من رصد التريند، التسجيل الصوتي، والمونتاج بنجاح 100%!")
             
-            # عرض النتيجة النهائية لريم داخل الموقع
             st.markdown('<div class="trend-box">', unsafe_allow_html=True)
             st.markdown(f"### 📥 فيديو التريند الجاهز تماماً للرفع وحصد المشاهدات:")
             st.caption(f"📄 النص الذي تم إلقاؤه في الفيديو: {script_text}")
@@ -97,7 +83,6 @@ if st.button("🚀 ابــدع وصــنّــع الـتـريـنـد الآ
                 st.video(file.read())
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # إرسال إشعار فوري لتليجرام ريم بأن فيديو التريند المباشر جاهز
             TELEGRAM_TOKEN = "8861542684:AAGpm77vVt0KLttJXDEph3vplvDAjlvQ2Yk"
             TELEGRAM_CHAT_ID = "8061216590"
             alert_msg = f"🔥 *ريم! البوت صاد تريند جديد وسوى عليه فيديو كامل!* 🔥\n\n🎯 *التريند المرصود:* {current_trend}\n\nادخلي الموقع الآن، وحملي مقطع التريند الجاهز واكتسحي المشاهدات! 🚀"
@@ -106,7 +91,6 @@ if st.button("🚀 ابــدع وصــنّــع الـتـريـنـد الآ
         except Exception as e:
             st.error("⚠️ واجه السيرفر ضغطاً أثناء رندرة مقطع المونتاج. يرجى المحاولة مرة أخرى.")
         finally:
-            # تنظيف السيرفر من الملفات ليبقى سريعاً وخفيفاً
             if os.path.exists("trend_voice.mp3"): os.remove("trend_voice.mp3")
             if os.path.exists("trend_bg.mp4"): os.remove("trend_bg.mp4")
 else:
