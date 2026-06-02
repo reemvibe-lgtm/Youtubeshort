@@ -1,2 +1,2 @@
-beautifulsoup4
-gtts
+streamlit
+yt-dlp
