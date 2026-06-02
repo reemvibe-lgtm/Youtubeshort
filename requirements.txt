@@ -1,5 +1,2 @@
-streamlit
-gtts
-moviepy
-requests
 beautifulsoup4
+gtts
