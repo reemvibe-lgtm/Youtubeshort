@@ -22,69 +22,76 @@ st.markdown("""
 local_time = datetime.now() + timedelta(hours=3)
 
 st.title("🔥 DIAMOND AI TREND AUTOMATOR")
-st.write("🤖 **البوت الخارق: صيد مواضيع التريند الحالية + توليد الفويس أوفر الفوري بضغطة زر**")
-st.write(f"⏱️ توقيت رصد التريند المحلي: {local_time.strftime('%Y-%m-%d %H:%M:%S')}")
+st.write("🤖 **البوت المطور: صيد مواضيع تريند متجددة في كل ضغطة + توليد فويس أوفر فوري**")
+st.write(f"⏱️ توقيت رصد التريند الحالي: {local_time.strftime('%Y-%m-%d %H:%M:%S')}")
 st.write("---")
 
-# دالة قشط وجلب التريندات الحية من الويب
-def fetch_live_trending_topics():
+# دالة قشط وجلب التريندات الحية بشكل عشوائي ومتجدد في كل ضغطة
+def fetch_dynamic_trending_topic():
+    # استخدام مصادر وأقسام مختلفة لضمان تنوع المواضيع في كل مرة تضغطين "ابدع"
+    sources = [
+        "https://news.google.com/rss?hl=ar&gl=AE&ceid=AE:ar",  # أخبار عامة
+        "https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=ar&gl=AE&ceid=AE:ar", # تقنية
+        "https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=ar&gl=AE&ceid=AE:ar" # علوم وصحة
+    ]
     try:
-        url = "https://news.google.com/rss?hl=ar&gl=AE&ceid=AE:ar"
-        response = requests.get(url, timeout=10)
+        chosen_source = random.choice(sources)
+        response = requests.get(chosen_source, timeout=10)
         soup = BeautifulSoup(response.content, 'xml')
         titles = [item.title.text for item in soup.find_all('item')]
+        
         if titles:
-            chosen_trend = random.choice(titles[:15])
+            # اختيار عنوان عشوائي تماماً من قائمة أول 20 تريند متداول لضمان التجديد
+            chosen_trend = random.choice(titles[:20])
             if " - " in chosen_trend:
                 chosen_trend = chosen_trend.split(" - ")[0]
             return chosen_trend
     except:
         pass
-    return "تطورات متسارعة في عالم الذكاء الاصطناعي والتكنولوجيا تذهل العالم اليوم"
+    return "تطور تكنولوجي مذهل واكتشافات علمية جديدة تثير الجدل اليوم"
 
-st.subheader("🎬 مصنع محتوى التريند الحي")
-if st.button("🚀 ابــدع وصــنّــع الـتـريـنـد الآلـي"):
+st.subheader("🎬 مصنع محتوى التريندات المتجددة")
+st.write("اضغطي على الزر بالأسفل، وفي كل مرة سيقوم البوت بصيد موضوع مختلف تماماً عن السابق وثاني خالص:")
+
+if st.button("🚀 ابــدع وصــنّــع مـوضـوعـاً جـديـداً"):
     
-    with st.spinner("🔍 1. جاري قشط الإنترنت وفحص مواضيع التريند الأكثر تفاعلاً الآن..."):
-        current_trend = fetch_live_trending_topics()
-        st.success(f"📌 تم رصد تريند الساعة بنجاح: [{current_trend}]")
+    with st.spinner("🔍 جاري فحص شبكة الإنترنت وقشط موضوع تريند جديد تماماً..."):
+        current_trend = fetch_dynamic_trending_topic()
+        st.success(f"📌 تم رصد موضوع تريند متجدد: [{current_trend}]")
         
-    with st.spinner("📝 2. جاري صياغة السيناريو الفيرال (Viral Script)..."):
-        script_text = f"هل سمعت آخر الأخبار المتداولة بشدة الآن؟ التريند الحالي يتحدث عن: {current_trend}. هذا الموضوع يشغل منصات التواصل الاجتماعي في هذه الساعات ويثير الكثير من التساؤلات والاهتمام. ما هو رأيكم في هذا التطور المفاجئ؟ شاركونا في التعليقات ولا تنسوا المتابعة لكشف التريند القادم أولاً بأول!"
+    with st.spinner("📝 صياغة سيناريو الشورتس بأسلوب فيرال شيق..."):
+        script_text = f"هل سمعت آخر الأخبار المتداولة بشدة الآن؟ التريند الجديد يتحدث عن: {current_trend}. هذا الموضوع يشغل منصات التواصل الاجتماعي في هذه الساعات ويثير الكثير من التساؤلات والاهتمام. ما هو رأيكم في هذا التطور المفاجئ؟ شاركونا في التعليقات ولا تنسوا المتابعة لكشف التريند القادم أولاً بأول!"
         
-    with st.spinner("🎙️ 3. جاري توليد الفويس أوفر الصوتي (Voice Over)..."):
+    with st.spinner("🎙️ توليد تسجيل الفويس أوفر (Voice Over)..."):
         tts = gTTS(text=script_text, lang='ar', slow=False)
-        tts.save("trend_voice.mp3")
+        tts.save("dynamic_trend_voice.mp3")
         
-    st.success("✨ تم تجهيز عناصر الفيديو بنجاح 100%!")
+    st.success("✨ تم تجهيز عناصر مقطعكِ الجديد بنجاح!")
     
-    # عرض الأغراض لـ ريم جاهزة ومقشرة
+    # عرض النتائج
     st.markdown('<div class="trend-box">', unsafe_allow_html=True)
-    
-    st.markdown(f"### 📄 النص المولد للتريند:")
+    st.markdown(f"### 📄 السيناريو الخاص بهذا التريند:")
     st.info(script_text)
     
-    st.markdown("### 🎙️ استمع وحمّل الفويس أوفر (Voice Over):")
-    with open("trend_voice.mp3", "rb") as audio_file:
+    st.markdown("### 🎙️ استمع وحمّل الفويس أوفر المتولد:")
+    with open("dynamic_trend_voice.mp3", "rb") as audio_file:
         st.audio(audio_file.read(), format="audio/mp3")
         
-    st.markdown("### 📺 فيديو الخلفية الفخم المقترح (مقاس تيك توك 9:16):")
-    st.write("اضغطي على الرابط التالي لتحميل الخلفية المتناسقة مباشرة بجودة عالية:")
-    st.markdown("[🔗 اضغطي هنا لتحميل فيديو الخلفية السريع الحركي](https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-and-numbers-31948-large.mp4)")
-    
+    st.markdown("### 📺 فيديو الخلفية المقترح للمونتاج سريعاً:")
+    stable_video_url = "https://upload.wikimedia.org/wikipedia/commons/d/df/Data_Network_Background_Loop.mp4"
+    st.markdown(f"[🔗 اضغطي هنا لتحميل فيديو الخلفية بجودة عالية]({stable_video_url})")
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # تنظيف السيرفر
-    if os.path.exists("trend_voice.mp3"):
-        os.remove("trend_voice.mp3")
+    if os.path.exists("dynamic_trend_voice.mp3"):
+        os.remove("dynamic_trend_voice.mp3")
         
-    # إرسال تنبيه لتليجرام
+    # إرسال التنبيه الفوري لبوت التليجرام الخاص بكِ
     try:
         TELEGRAM_TOKEN = "8861542684:AAGpm77vVt0KLttJXDEph3vplvDAjlvQ2Yk"
         TELEGRAM_CHAT_ID = "8061216590"
-        alert_msg = f"🔥 *ريم! البوت صاد تريند جديد وجاهز للرفع!* 🔥\n\n🎯 *التريند:* {current_trend}\n\nادخلي الموقع الآن واسمعي الفويس أوفر الخارق واكتسحي المشاهدات! 🚀"
+        alert_msg = f"🎬 *ريم! البوت صاد لكِ موضوع تريند جديد وثاني تماماً!* \n\n🎯 *الموضوع:* {current_trend}\n\nادخلي الموقع الآن واسمعي الفويس أوفر الجديد الجاهز! 🚀"
         requests.post(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage", json={"chat_id": TELEGRAM_CHAT_ID, "text": alert_msg, "parse_mode": "Markdown"})
     except:
         pass
 else:
-    st.info("💡 اضغطي على الزر وسيقوم البوت بصيد التريند وصناعة الفويس أوفر لكِ فوراً بدون أي مشاكل!")
+    st.info("💡 اضغطي على الزر وسيقوم البوت بصيد تريند جديد في كل مرة تجربة!")
